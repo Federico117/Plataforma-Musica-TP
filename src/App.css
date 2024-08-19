@@ -1,0 +1,69 @@
+* {
+    color:white;
+    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+html {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: rgb(74, 74, 74);
+    padding: 0;
+    margin: 0;
+}
+body {
+    background-color: rgb(74, 74, 74);
+    padding: 0;
+    margin: 0;
+}
+header {
+    display:flex;
+    background-color:rgb(48, 48, 48);
+    align-items: center;
+    justify-content: space-between;
+}
+.hijoheader1 {
+    display:flex;
+    align-items: center;
+}
+.contenedorprincipal {
+    width:80%;
+    margin:auto;
+}
+.barrita{
+    display:flex; 
+    justify-content:space-between;
+    background-color: rgba(255, 255, 255, 0.336);
+    border-radius:20px;
+    align-items: center;
+}
+.leyendaImagen {
+    margin:0;
+    padding:0 10px;
+}
+.imagencirculo {
+    width:60px;
+    height:60px;
+    border-radius:100%;
+}
+.buscador {
+    width:400px;
+    height:40px;
+    border-radius:20px;
+    text-align:center;
+}
+.usuario {
+    display:flex;
+    align-items: center;
+}
+
+.usuario img {
+    border-radius:100%;
+}
+section {
+    display: flex;
+}
+#cardTitle {
+    text-align:center;
+}
