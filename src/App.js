@@ -48,9 +48,38 @@ function App() {
   return (
     <>
     <Header />
-    <ContenedorPrincipal />
+    <Toggle />
+    
     <BarraReproduccion />
     </>
+  )
+}
+function Toggle(){
+  return (
+    <div style={{display:'flex'}}>
+      <div style={{width:'300px', border:'2px solid red'}}>
+        <button style={{borderRadius:'15px',color:'black', width:'100%'}}>Nueva playlist</button>
+        <div>Como</div>
+        <div>Estamos</div>
+      </div>
+    {false ? <ContenedorPrincipal /> : <Formulario />}
+    </div>
+  )
+}
+
+function Formulario(){
+  return (
+    <div style={{paddingLeft:'100px', backgroundColor:'rgba(150,150,150,0.2)'}}>
+      <form >
+      <label htmlFor="title">Titutlo:</label><br/>
+      <input type="text" id="title"/><br/>
+      <label htmlFor="title">Titutlo:</label><br/>
+      <input type="text" id="title"/><br/>
+      <label htmlFor="title">Titutlo:</label><br/>
+      <input type="text" id="title"/>
+    </form>
+    </div>
+    
   )
 }
 
@@ -139,9 +168,14 @@ function ArtistCard({arreglo}){
 function SongCard({songArray, ancho, alto}){
   return (
     <>{songArray.map(arre => (
-      <article style={{ padding: '10px', margin: '10px', width:'300px'}}>
+      <article className="articleSong" style={{ padding: '10px', margin: '10px', width:'300px'}}>
         <img src={arre.imagen} width={ancho} height={alto} style={{ border: '3px solid white' }} />
-        <h2 id="cardTitle">{arre.nombre}</h2>
+        <div style={{paddingLeft:'10px'}}>
+        <h6 style={{fontSize:'13px'}}>Cancion:</h6>
+        <h6 style={{fontSize:'15px', color:'yellow'}}>{arre.nombre}</h6>
+        <h6 style={{fontSize:'13px'}}>Artista:</h6>
+        <h6>{arre.artista}</h6>
+        </div>
       </article>
     ))}
     </>

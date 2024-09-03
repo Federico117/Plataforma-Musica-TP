@@ -67,3 +67,6 @@ section {
 #cardTitle {
     text-align:center;
 }
+.articleSong {
+    display:flex;
+}
