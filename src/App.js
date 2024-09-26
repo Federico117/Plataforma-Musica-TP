@@ -222,6 +222,19 @@ function Principal() {
   ]);
   const [alternar, setAlternar] = useState(true);
 
+  const [audios, setAudios] = useState([]);
+
+  const fetchPodcastData = () => {
+    fetch("https://api.audioboom.com/audio_clips")
+      .then((response) => response.json())
+      .then((data) => setAudios(data.body.audio_clips))
+      .catch((error) => console.log(error));
+  };
+
+  useEffect(() => {
+    fetchPodcastData();
+  }, []);
+
   return (
     <div style={{ display: "flex", width: "100vw" }}>
       <SideBar alternar={alternar} setAlternar={setAlternar}>
@@ -234,7 +247,7 @@ function Principal() {
         ))}
       </SideBar>
       {alternar ? (
-        <ContenedorPrincipal />
+        <ContenedorPrincipal dataArray={audios} />
       ) : (
         <Formulario lista={listplay} setList={setListPlay} />
       )}
@@ -371,7 +384,7 @@ function Header() {
     </>
   );
 }
-function ContenedorPrincipal() {
+function ContenedorPrincipal(props) {
   return (
     <div className="contenedorprincipal">
       <br />
@@ -390,7 +403,11 @@ function ContenedorPrincipal() {
         <PrevNextButtons />
       </div>
       <section style={{ flexWrap: "wrap" }}>
-        <AlbumCard albumArray={canciones.slice(4, 7)} ancho="300" alto="300" />
+        <AlbumCard
+          albumArray={props.dataArray.slice(4, 7)}
+          ancho="300"
+          alto="300"
+        />
       </section>
       <div className="barrita">
         <CirculoImgTexto
@@ -524,15 +541,20 @@ function SongCard({ songArray, ancho, alto }) {
 function AlbumCard({ albumArray, ancho, alto }) {
   return (
     <>
-      {albumArray.map((arre) => (
+      <h1></h1>
+      {albumArray.map((arre, indice) => (
         <article style={{ padding: "10px", margin: "10px", width: "300px" }}>
           <img
-            src={arre.imagen}
+            src={
+              albumArray[indice] &&
+              arre.channel &&
+              arre.channel.urls.logo_image.original
+            }
             width={ancho}
             height={alto}
             style={{ border: "3px solid white" }}
           />
-          <h2 id="cardTitle">{arre.nombre}</h2>
+          <h2 id="cardTitle">{arre.title}</h2>
         </article>
       ))}
     </>
@@ -550,22 +572,26 @@ function BarraReproduccion() {
         bottom: "0",
         display: "flex",
         alignItems: "center",
+        justifyContent: "center",
       }}
     >
-      <img
-        src="/imagenes/playboton.png"
-        width="60"
-        height="60"
-        style={{ marginLeft: "160px" }}
-      />
+      <img src="/imagenes/playboton.png" width="60" height="60" />
       <div
         style={{
           width: "900px",
           height: "10px",
           backgroundColor: "white",
-          margin: "auto",
+          marginLeft: "20px",
         }}
-      ></div>
+      >
+        <div
+          style={{
+            width: "300px",
+            height: "10px",
+            backgroundColor: "green",
+          }}
+        ></div>
+      </div>
     </div>
   );
 }
