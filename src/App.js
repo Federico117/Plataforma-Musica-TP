@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import estilos from "./App.css";
+import AudioPlayer from "./components/AudioPlayer";
 
 const artistas = [
   { id: 1, nombre: "The beatles", imagen: "/imagenes/artistas/beatles.PNG" },
@@ -195,6 +196,7 @@ const canciones = [
 function App() {
   return (
     <>
+      <AudioPlayer audioSrc="/audios/lospericos.mp3" />
       <Header />
       <Principal />
       <BarraReproduccion />
@@ -545,11 +547,7 @@ function AlbumCard({ albumArray, ancho, alto }) {
       {albumArray.map((arre, indice) => (
         <article style={{ padding: "10px", margin: "10px", width: "300px" }}>
           <img
-            src={
-              albumArray[indice] &&
-              arre.channel &&
-              arre.channel.urls.logo_image.original
-            }
+            src={arre?.channel?.urls?.logo_image?.original}
             width={ancho}
             height={alto}
             style={{ border: "3px solid white" }}
