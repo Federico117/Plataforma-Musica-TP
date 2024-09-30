@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import estilos from "./App.css";
 import AudioPlayer from "./components/AudioPlayer";
 
@@ -194,17 +194,19 @@ const canciones = [
 ];
 
 function App() {
+  const [pistaActual, setPistaActual] = useState("/audios/lospericos.mp3");
+
   return (
     <>
-      <AudioPlayer audioSrc="/audios/lospericos.mp3" />
+      <AudioPlayer audioSrc={pistaActual} />
       <Header />
-      <Principal />
+      <Principal setPistaActual={setPistaActual} />
       <BarraReproduccion />
     </>
   );
 }
 
-function Principal() {
+function Principal({ setPistaActual }) {
   const [listplay, setListPlay] = useState([
     {
       titulo: "Clasicos",
@@ -249,7 +251,10 @@ function Principal() {
         ))}
       </SideBar>
       {alternar ? (
-        <ContenedorPrincipal dataArray={audios} />
+        <ContenedorPrincipal
+          dataArray={audios}
+          setPistaActual={setPistaActual}
+        />
       ) : (
         <Formulario lista={listplay} setList={setListPlay} />
       )}
@@ -406,9 +411,10 @@ function ContenedorPrincipal(props) {
       </div>
       <section style={{ flexWrap: "wrap" }}>
         <AlbumCard
-          albumArray={props.dataArray.slice(4, 7)}
+          albumArray={props.dataArray.slice(16, 19)}
           ancho="300"
           alto="300"
+          setPistaActual={props.setPistaActual}
         />
       </section>
       <div className="barrita">
@@ -496,7 +502,7 @@ function Buscador() {
   );
 }
 
-function ArtistCard({ arreglo }) {
+function ArtistCard({ arreglo, enlaceMp3 }) {
   return (
     <>
       {arreglo.map((arre) => (
@@ -540,22 +546,51 @@ function SongCard({ songArray, ancho, alto }) {
   );
 }
 
-function AlbumCard({ albumArray, ancho, alto }) {
+function AlbumCard({ albumArray, ancho, alto, enlaceMp3, setPistaActual }) {
   return (
     <>
       <h1></h1>
-      {albumArray.map((arre, indice) => (
-        <article style={{ padding: "10px", margin: "10px", width: "300px" }}>
-          <img
-            src={arre?.channel?.urls?.logo_image?.original}
-            width={ancho}
-            height={alto}
-            style={{ border: "3px solid white" }}
+      {albumArray.map((arre, indice) => {
+        const imagenPortada = arre?.channel?.urls?.logo_image?.original;
+        console.log(imagenPortada);
+        return (
+          <SingleAlbumCard
+            recurso={arre}
+            ancho="300"
+            alto="300"
+            imagen={imagenPortada ? imagenPortada : "/imagenes/logito.png"}
+            setPistaActual={setPistaActual}
           />
-          <h2 id="cardTitle">{arre.title}</h2>
-        </article>
-      ))}
+        );
+      })}
     </>
+  );
+}
+function SingleAlbumCard({ recurso, imagen, ancho, alto, setPistaActual }) {
+  const recursoMp3 = useRef(null);
+
+  useEffect(() => {
+    recursoMp3.current = recurso?.urls?.high_mp3;
+  });
+
+  function manipularClick() {
+    //aca deberiamos modificar el estado del reproductor con su setState pasado por props
+    setPistaActual(recursoMp3.current);
+  }
+
+  return (
+    <article
+      style={{ padding: "10px", margin: "10px", width: "300px" }}
+      onClick={manipularClick}
+    >
+      <img
+        src={imagen}
+        width={ancho}
+        height={alto}
+        style={{ border: "3px solid white" }}
+      />
+      <h2 id="cardTitle">{recurso.title}</h2>
+    </article>
   );
 }
 
