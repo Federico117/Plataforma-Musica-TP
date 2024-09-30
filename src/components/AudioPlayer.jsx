@@ -62,34 +62,42 @@ const AudioPlayer = ({ audioSrc }) => {
 
   return (
     <div className="player-card">
-      <img
+      {/*<img
         src="/imagenes/logito.png"
         alt="Cover Image"
         className="player-card-image"
-      />
+  />*/}
 
-      {/* Input range for seeking within the audio track.  */}
-      <input
-        type="range"
-        min="0"
-        max={duration}
-        value={currentTime}
-        onChange={handleSeek}
-      />
-
-      {/* The <audio> element for playing the audio. */}
-      <audio ref={audioRef} src={audioSrc} />
-
-      {/* Display current and total duration of the track*/}
-      <div className="track-duration">
-        <p>{formatDuration(currentTime)}</p>
-        <p>{formatDuration(duration)}</p>
+      <div>
+        {/* Play/Pause button with a dynamic icon */}
+        <button onClick={handlePlayPause} className="player-btn">
+          {isPlaying ? (
+            <img src="/imagenes/pause.png" width="52" height="52" />
+          ) : (
+            <img src="/imagenes/playboton.png" width="50" height="50" />
+          )}
+        </button>
       </div>
 
-      {/* Play/Pause button with a dynamic icon */}
-      <button onClick={handlePlayPause}>
-        <span class="material-symbols-rounded">{isPlaying ? "⏸" : "▶"}</span>
-      </button>
+      <div className="contenedor-input-duration">
+        {/* Input range for seeking within the audio track.  */}
+        <input
+          type="range"
+          min="0"
+          max={duration}
+          value={currentTime}
+          onChange={handleSeek}
+        />
+
+        {/* The <audio> element for playing the audio. */}
+        <audio ref={audioRef} src={audioSrc} />
+
+        {/* Display current and total duration of the track*/}
+        <div className="track-duration">
+          <p style={{ color: "white" }}>{formatDuration(currentTime)}</p>
+          <p style={{ color: "white" }}>{formatDuration(duration)}</p>
+        </div>
+      </div>
     </div>
   );
 };

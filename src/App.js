@@ -201,7 +201,6 @@ function App() {
       <AudioPlayer audioSrc={pistaActual} />
       <Header />
       <Principal setPistaActual={setPistaActual} />
-      <BarraReproduccion />
     </>
   );
 }
@@ -411,7 +410,7 @@ function ContenedorPrincipal(props) {
       </div>
       <section style={{ flexWrap: "wrap" }}>
         <AlbumCard
-          albumArray={props.dataArray.slice(16, 19)}
+          albumArray={props.dataArray.slice(7, 10)}
           ancho="300"
           alto="300"
           setPistaActual={props.setPistaActual}
@@ -558,7 +557,7 @@ function AlbumCard({ albumArray, ancho, alto, enlaceMp3, setPistaActual }) {
             recurso={arre}
             ancho="300"
             alto="300"
-            imagen={imagenPortada ? imagenPortada : "/imagenes/logito.png"}
+            imagen={imagenPortada ? imagenPortada : "/imagenes/no-image.svg"}
             setPistaActual={setPistaActual}
           />
         );
@@ -580,7 +579,12 @@ function SingleAlbumCard({ recurso, imagen, ancho, alto, setPistaActual }) {
 
   return (
     <article
-      style={{ padding: "10px", margin: "10px", width: "300px" }}
+      style={{
+        padding: "10px",
+        margin: "10px",
+        width: "300px",
+        cursor: "pointer",
+      }}
       onClick={manipularClick}
     >
       <img
