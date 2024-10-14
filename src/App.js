@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import estilos from "./App.css";
+import AudioPlayer from "./components/AudioPlayer";
 
 const artistas = [
   { id: 1, nombre: "The beatles", imagen: "/imagenes/artistas/beatles.PNG" },
@@ -193,16 +194,18 @@ const canciones = [
 ];
 
 function App() {
+  const [pistaActual, setPistaActual] = useState("/audios/lospericos.mp3");
+
   return (
     <>
+      <AudioPlayer audioSrc={pistaActual} />
       <Header />
-      <Principal />
-      <BarraReproduccion />
+      <Principal setPistaActual={setPistaActual} />
     </>
   );
 }
 
-function Principal() {
+function Principal({ setPistaActual }) {
   const [listplay, setListPlay] = useState([
     {
       titulo: "Clasicos",
@@ -222,6 +225,19 @@ function Principal() {
   ]);
   const [alternar, setAlternar] = useState(true);
 
+  const [audios, setAudios] = useState([]);
+
+  const fetchPodcastData = () => {
+    fetch("https://api.audioboom.com/audio_clips")
+      .then((response) => response.json())
+      .then((data) => setAudios(data.body.audio_clips))
+      .catch((error) => console.log(error));
+  };
+
+  useEffect(() => {
+    fetchPodcastData();
+  }, []);
+
   return (
     <div style={{ display: "flex", width: "100vw" }}>
       <SideBar alternar={alternar} setAlternar={setAlternar}>
@@ -234,7 +250,10 @@ function Principal() {
         ))}
       </SideBar>
       {alternar ? (
-        <ContenedorPrincipal />
+        <ContenedorPrincipal
+          dataArray={audios}
+          setPistaActual={setPistaActual}
+        />
       ) : (
         <Formulario lista={listplay} setList={setListPlay} />
       )}
@@ -371,7 +390,7 @@ function Header() {
     </>
   );
 }
-function ContenedorPrincipal() {
+function ContenedorPrincipal(props) {
   return (
     <div className="contenedorprincipal">
       <br />
@@ -390,7 +409,12 @@ function ContenedorPrincipal() {
         <PrevNextButtons />
       </div>
       <section style={{ flexWrap: "wrap" }}>
-        <AlbumCard albumArray={canciones.slice(4, 7)} ancho="300" alto="300" />
+        <AlbumCard
+          albumArray={props.dataArray.slice(7, 10)}
+          ancho="300"
+          alto="300"
+          setPistaActual={props.setPistaActual}
+        />
       </section>
       <div className="barrita">
         <CirculoImgTexto
@@ -477,7 +501,7 @@ function Buscador() {
   );
 }
 
-function ArtistCard({ arreglo }) {
+function ArtistCard({ arreglo, enlaceMp3 }) {
   return (
     <>
       {arreglo.map((arre) => (
@@ -521,21 +545,56 @@ function SongCard({ songArray, ancho, alto }) {
   );
 }
 
-function AlbumCard({ albumArray, ancho, alto }) {
+function AlbumCard({ albumArray, ancho, alto, enlaceMp3, setPistaActual }) {
   return (
     <>
-      {albumArray.map((arre) => (
-        <article style={{ padding: "10px", margin: "10px", width: "300px" }}>
-          <img
-            src={arre.imagen}
-            width={ancho}
-            height={alto}
-            style={{ border: "3px solid white" }}
+      <h1></h1>
+      {albumArray.map((arre, indice) => {
+        const imagenPortada = arre?.channel?.urls?.logo_image?.original;
+        console.log(imagenPortada);
+        return (
+          <SingleAlbumCard
+            recurso={arre}
+            ancho="300"
+            alto="300"
+            imagen={imagenPortada ? imagenPortada : "/imagenes/no-image.svg"}
+            setPistaActual={setPistaActual}
           />
-          <h2 id="cardTitle">{arre.nombre}</h2>
-        </article>
-      ))}
+        );
+      })}
     </>
+  );
+}
+function SingleAlbumCard({ recurso, imagen, ancho, alto, setPistaActual }) {
+  const recursoMp3 = useRef(null);
+
+  useEffect(() => {
+    recursoMp3.current = recurso?.urls?.high_mp3;
+  });
+
+  function manipularClick() {
+    //aca deberiamos modificar el estado del reproductor con su setState pasado por props
+    setPistaActual(recursoMp3.current);
+  }
+
+  return (
+    <article
+      style={{
+        padding: "10px",
+        margin: "10px",
+        width: "300px",
+        cursor: "pointer",
+      }}
+      onClick={manipularClick}
+    >
+      <img
+        src={imagen}
+        width={ancho}
+        height={alto}
+        style={{ border: "3px solid white" }}
+      />
+      <h2 id="cardTitle">{recurso.title}</h2>
+    </article>
   );
 }
 
@@ -550,22 +609,26 @@ function BarraReproduccion() {
         bottom: "0",
         display: "flex",
         alignItems: "center",
+        justifyContent: "center",
       }}
     >
-      <img
-        src="/imagenes/playboton.png"
-        width="60"
-        height="60"
-        style={{ marginLeft: "160px" }}
-      />
+      <img src="/imagenes/playboton.png" width="60" height="60" />
       <div
         style={{
           width: "900px",
           height: "10px",
           backgroundColor: "white",
-          margin: "auto",
+          marginLeft: "20px",
         }}
-      ></div>
+      >
+        <div
+          style={{
+            width: "300px",
+            height: "10px",
+            backgroundColor: "green",
+          }}
+        ></div>
+      </div>
     </div>
   );
 }
