@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import estilos from "./App.css";
 import AudioPlayer from "./components/AudioPlayer";
 
+//Se agrego este comentario pendiente de entrega
+
 const artistas = [
   { id: 1, nombre: "The beatles", imagen: "/imagenes/artistas/beatles.PNG" },
   {
